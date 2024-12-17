@@ -63,7 +63,11 @@ func TestBinanceGetPrice(t *testing.T) {
 
 	t.Skip("skip integration test")
 
-	binanceClient := binance.NewBinanceSwapVenue(config)
+	binanceClient := binance.NewBinanceSwapVenue(binance.BinanceSwapVenueConfig{
+		URL: binance.DefaultBinanceURL,
+
+		// Note: price API does not require keys.
+	})
 
 	ctx := context.Background()
 
