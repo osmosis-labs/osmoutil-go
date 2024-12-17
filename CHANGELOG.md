@@ -35,8 +35,9 @@ Ref: https://keepachangelog.com/en/1.0.0/
 
 # Changelog
 
-## Unreleased
+## v0.0.2
 
+- Add Binance swap venue.
 - Add tx package with nonce tracker.
 
 ## v0.0.1
