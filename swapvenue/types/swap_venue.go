@@ -23,7 +23,7 @@ type SwapVenueI interface {
 
 	// GetBalances returns normalized balances (exponents applied) for the given denoms.
 	// CONTRACT: the asset exponents are applied to the amounts.
-	GetBalances(ctx context.Context, denoms []string) (map[string]float64, error)
+	GetBalances(ctx context.Context, denoms ...string) (map[string]float64, error)
 
 	// GetTradingFee returns the trading fee for the venue.
 	GetTradingFee() float64

@@ -74,7 +74,7 @@ func (b *BinanceSwapVenue) MarketBuy(ctx context.Context, pair swapvenuetypes.Sw
 
 // GetBalance implements domain.SwapVenueI.
 func (b *BinanceSwapVenue) GetBalance(ctx context.Context, denom string) (float64, error) {
-	balances, err := b.GetBalances(ctx, []string{denom})
+	balances, err := b.GetBalances(ctx, denom)
 	if err != nil {
 		return 0, err
 	}
@@ -83,7 +83,7 @@ func (b *BinanceSwapVenue) GetBalance(ctx context.Context, denom string) (float6
 }
 
 // GetBalances implements domain.SwapVenueI.
-func (b *BinanceSwapVenue) GetBalances(ctx context.Context, denoms []string) (map[string]float64, error) {
+func (b *BinanceSwapVenue) GetBalances(ctx context.Context, denoms ...string) (map[string]float64, error) {
 	client := binance.NewClient(b.config.APIKey, b.config.SecretKey)
 	accountService := client.NewGetAccountService()
 
@@ -93,9 +93,11 @@ func (b *BinanceSwapVenue) GetBalances(ctx context.Context, denoms []string) (ma
 		return nil, err
 	}
 
+	includeAll := len(denoms) == 0
+
 	balances := make(map[string]float64)
 	for _, balance := range res.Balances {
-		if slices.Contains(denoms, balance.Asset) {
+		if slices.Contains(denoms, balance.Asset) || includeAll {
 
 			// Parse float
 			parsedBalance, err := strconv.ParseFloat(balance.Free, 64)

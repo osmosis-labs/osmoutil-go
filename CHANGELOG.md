@@ -35,6 +35,10 @@ Ref: https://keepachangelog.com/en/1.0.0/
 
 # Changelog
 
+## v0.0.3
+
+- GetBalances API now supports optional denom filtering.
+
 ## v0.0.2
 
 - Add Binance swap venue.
