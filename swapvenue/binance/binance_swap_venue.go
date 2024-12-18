@@ -35,7 +35,11 @@ type BinanceSwapVenueConfig struct {
 	SecretKey string
 }
 
-func NewBinanceSwapVenue(config BinanceSwapVenueConfig) *BinanceSwapVenue {
+func NewBinanceSwapVenue(config BinanceSwapVenueConfig) swapvenuetypes.SwapVenueI {
+	return newBinanceSwapVenue(config)
+}
+
+func newBinanceSwapVenue(config BinanceSwapVenueConfig) *BinanceSwapVenue {
 	return &BinanceSwapVenue{
 		assets:         make([]swapvenuetypes.AssetI, 0),
 		swapVenuePairs: make(map[swapvenuetypes.AbstractSwapPair][]swapvenuetypes.SwapVenuePairI),

@@ -81,7 +81,7 @@ func TestBinanceSwapVenue_GetUserAssets(t *testing.T) {
 
 	t.Skip("skip integration test")
 
-	binanceClient := binance.NewBinanceSwapVenue(config)
+	binanceClient := binance.NewBinanceSwapVenueConcrete(config)
 
 	ctx := context.Background()
 
@@ -95,7 +95,7 @@ func TestBinanceSwapVenue_GetVenueAssets(t *testing.T) {
 
 	t.Skip("skip integration test")
 
-	binanceClient := binance.NewBinanceSwapVenue(config)
+	binanceClient := binance.NewBinanceSwapVenueConcrete(config)
 
 	ctx := context.Background()
 
