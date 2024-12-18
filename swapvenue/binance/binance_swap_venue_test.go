@@ -104,3 +104,17 @@ func TestBinanceSwapVenue_GetVenueAssets(t *testing.T) {
 
 	t.Log(assets)
 }
+
+func TestBinanceSwapVenue_GetBalances(t *testing.T) {
+
+	t.Skip("skip integration test")
+
+	binanceClient := binance.NewBinanceSwapVenue(config)
+
+	ctx := context.Background()
+
+	balances, err := binanceClient.GetBalances(ctx)
+	require.NoError(t, err)
+
+	t.Log(balances)
+}

@@ -85,7 +85,7 @@ func (b *BinanceSwapVenue) GetBalance(ctx context.Context, denom string) (float6
 // GetBalances implements domain.SwapVenueI.
 func (b *BinanceSwapVenue) GetBalances(ctx context.Context, denoms ...string) (map[string]float64, error) {
 	client := binance.NewClient(b.config.APIKey, b.config.SecretKey)
-	accountService := client.NewGetAccountService()
+	accountService := client.NewGetAccountService().OmitZeroBalances(true)
 
 	// Get account snapshot
 	res, err := accountService.Do(ctx)
