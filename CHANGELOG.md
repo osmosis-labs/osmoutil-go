@@ -35,6 +35,10 @@ Ref: https://keepachangelog.com/en/1.0.0/
 
 # Changelog
 
+## v0.0.6
+
+- Add mock swap venue.
+
 ## v0.0.5
 
 - Return interface from BinanceSwapVenue constructor.
