@@ -32,6 +32,10 @@ type SwapVenueI interface {
 	// given an abstract pair.
 	GetSwapVenuePairs(pair AbstractSwapPair) []SwapVenuePairI
 
+	// GetVenueAssets returns the assets supported by the venue
+	// These are meant to be retrieved from the venue's data source.
+	GetVenueAssets(ctx context.Context) ([]AssetI, error)
+
 	// RegisterSwapVenuePair registers the pairs supported by the venue.
 	RegisterSwapVenuePair(pair AbstractSwapPair, venuePairs []SwapVenuePairI)
 

@@ -17,6 +17,7 @@ type MockSwapVenue struct {
 	MarketSellFunc              func(ctx context.Context, pair swapvenuetypes.SwapVenuePairI, amount float64) (swapvenuetypes.OrderResult, error)
 	RegisterSupportedAssetsFunc func(assets []swapvenuetypes.AssetI)
 	RegisterSwapVenuePairFunc   func(pair swapvenuetypes.AbstractSwapPair, venuePairs []swapvenuetypes.SwapVenuePairI)
+	GetVenueAssetsFunc          func(ctx context.Context) ([]swapvenuetypes.AssetI, error)
 }
 
 // GetBalance implements swapvenuetypes.SwapVenueI.
@@ -95,6 +96,14 @@ func (m *MockSwapVenue) RegisterSwapVenuePair(pair swapvenuetypes.AbstractSwapPa
 	if m.RegisterSwapVenuePairFunc != nil {
 		m.RegisterSwapVenuePairFunc(pair, venuePairs)
 	}
+}
+
+// GetVenueAssets implements swapvenuetypes.SwapVenueI.
+func (m *MockSwapVenue) GetVenueAssets(ctx context.Context) ([]swapvenuetypes.AssetI, error) {
+	if m.GetVenueAssetsFunc != nil {
+		return m.GetVenueAssetsFunc(ctx)
+	}
+	return nil, nil
 }
 
 var _ swapvenuetypes.SwapVenueI = &MockSwapVenue{}
