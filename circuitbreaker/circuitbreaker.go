@@ -19,6 +19,9 @@ const (
 type CircuitBreaker interface {
 	Execute(operation func() error) error
 	GetState() State
+
+	GetLastSuccessTime() time.Time
+	GetLastFailureTime() time.Time
 }
 
 // circuitBreaker implements the circuit breaker pattern
@@ -30,10 +33,25 @@ type circuitBreaker struct {
 	currentState     State
 	failureCount     int
 	lastFailureTime  time.Time
+	lastSuccessTime  time.Time
 	successCount     int
 
 	onStateChange func(from, to State)
 	onError       func(err error)
+}
+
+// GetLastFailureTime implements CircuitBreaker.
+func (cb *circuitBreaker) GetLastFailureTime() time.Time {
+	cb.mu.RLock()
+	defer cb.mu.RUnlock()
+	return cb.lastFailureTime
+}
+
+// GetLastSuccessTime implements CircuitBreaker.
+func (cb *circuitBreaker) GetLastSuccessTime() time.Time {
+	cb.mu.RLock()
+	defer cb.mu.RUnlock()
+	return cb.lastSuccessTime
 }
 
 // Options configures the circuit breaker
@@ -113,6 +131,8 @@ func (cb *circuitBreaker) handleResult(err error) {
 }
 
 func (cb *circuitBreaker) onSuccess() {
+	cb.lastSuccessTime = time.Now()
+
 	switch cb.currentState {
 	case StateHalfOpen:
 		cb.successCount++
@@ -198,3 +218,5 @@ func (s State) String() string {
 		return "UNKNOWN"
 	}
 }
+
+var _ CircuitBreaker = &circuitBreaker{}
