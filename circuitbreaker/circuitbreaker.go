@@ -33,6 +33,7 @@ type circuitBreaker struct {
 	successCount     int
 
 	onStateChange func(from, to State)
+	onError       func(err error)
 }
 
 // Options configures the circuit breaker
@@ -40,6 +41,7 @@ type Options struct {
 	FailureThreshold int
 	ResetTimeout     time.Duration
 	OnStateChange    func(from, to State)
+	OnError          func(err error)
 }
 
 // New creates a new circuit breaker with the given options
@@ -53,11 +55,15 @@ func New(options Options) *circuitBreaker {
 	if options.OnStateChange == nil {
 		options.OnStateChange = func(from, to State) {}
 	}
+	if options.OnError == nil {
+		options.OnError = func(err error) {}
+	}
 
 	return &circuitBreaker{
 		failureThreshold: options.FailureThreshold,
 		resetTimeout:     options.ResetTimeout,
 		onStateChange:    options.OnStateChange,
+		onError:          options.OnError,
 		currentState:     StateClosed,
 	}
 }
@@ -100,7 +106,7 @@ func (cb *circuitBreaker) handleResult(err error) {
 	defer cb.mu.Unlock()
 
 	if err != nil {
-		cb.onFailure()
+		cb.onFailure(err)
 	} else {
 		cb.onSuccess()
 	}
@@ -118,7 +124,7 @@ func (cb *circuitBreaker) onSuccess() {
 	}
 }
 
-func (cb *circuitBreaker) onFailure() {
+func (cb *circuitBreaker) onFailure(err error) {
 	cb.failureCount++
 	cb.lastFailureTime = time.Now()
 
@@ -127,6 +133,8 @@ func (cb *circuitBreaker) onFailure() {
 	} else if cb.currentState == StateHalfOpen {
 		cb.toState(StateOpen)
 	}
+
+	cb.onError(err)
 }
 
 func (cb *circuitBreaker) toHalfOpen() {
