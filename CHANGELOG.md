@@ -35,6 +35,10 @@ Ref: https://keepachangelog.com/en/1.0.0/
 
 # Changelog
 
+## v0.0.8
+
+- Add circuit breaker pattern implementation.
+
 ## v0.0.7
 
 - Add GetVenueAssets API to SwapVenueI.
