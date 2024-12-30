@@ -17,10 +17,10 @@ const (
 	HttpPOST httpMethod = http.MethodPost
 )
 
-// MakeRequest handles common HTTP request functionality by creating and executing an HTTP request
+// makeRequest handles common HTTP request functionality by creating and executing an HTTP request
 // with the provided method, URL, and optional payload. If response is provided, the response body
 // will be JSON decoded into it.
-func MakeRequest(ctx context.Context, method httpMethod, url string, payload interface{}, headers map[string]string, response interface{}) ([]byte, error) {
+func makeRequest(ctx context.Context, method httpMethod, url string, payload interface{}, headers map[string]string, response interface{}) ([]byte, error) {
 	var body io.Reader
 	if payload != nil {
 		jsonPayload, err := json.Marshal(payload)
@@ -93,4 +93,14 @@ func BuildURLWithParams(urlPrefix, endpoint string, params map[string]string) (s
 	}
 
 	return baseURL.String(), nil
+}
+
+// Get is a convenience wrapper for making HTTP GET requests
+func Get(ctx context.Context, url string, headers map[string]string, response interface{}) ([]byte, error) {
+	return makeRequest(ctx, HttpGET, url, nil, headers, response)
+}
+
+// Post is a convenience wrapper for making HTTP POST requests
+func Post(ctx context.Context, url string, payload interface{}, headers map[string]string, response interface{}) ([]byte, error) {
+	return makeRequest(ctx, HttpPOST, url, payload, headers, response)
 }

@@ -45,9 +45,8 @@ func TestMakeRequest(t *testing.T) {
 		headers := map[string]string{"X-Test-Header": "test-value"}
 		var response TestResponse
 
-		_, err := httputil.MakeRequest(
+		_, err := httputil.Post(
 			ctx,
-			httputil.HttpPOST,
 			server.URL,
 			payload,
 			headers,
@@ -63,11 +62,9 @@ func TestMakeRequest(t *testing.T) {
 		headers := map[string]string{"X-Test-Header": "test-value"}
 		var response TestResponse
 
-		_, err := httputil.MakeRequest(
+		_, err := httputil.Get(
 			ctx,
-			httputil.HttpGET,
 			server.URL,
-			nil,
 			headers,
 			&response,
 		)
@@ -78,11 +75,9 @@ func TestMakeRequest(t *testing.T) {
 
 	// Test error cases
 	t.Run("invalid URL", func(t *testing.T) {
-		_, err := httputil.MakeRequest(
+		_, err := httputil.Get(
 			ctx,
-			httputil.HttpGET,
 			"invalid-url",
-			nil,
 			nil,
 			nil,
 		)

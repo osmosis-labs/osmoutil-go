@@ -123,7 +123,7 @@ func (b *BinanceSwapVenue) GetPrice(ctx context.Context, pair swapvenuetypes.Swa
 	url := fmt.Sprintf("%s/ticker/price?symbol=%s", b.config.URL, baseQuote)
 
 	var binancePriceResponse binancePriceResponse
-	_, err := httputil.MakeRequest(ctx, httputil.HttpGET, url, nil, nil, &binancePriceResponse)
+	_, err := httputil.Get(ctx, url, nil, &binancePriceResponse)
 	if err != nil {
 		return 0, err
 	}
