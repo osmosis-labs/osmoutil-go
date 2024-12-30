@@ -52,7 +52,10 @@ func MakeRequest(ctx context.Context, method httpMethod, url string, payload int
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		respBody, _ := io.ReadAll(resp.Body)
+		respBody, err := io.ReadAll(resp.Body)
+		if err != nil {
+			return nil, fmt.Errorf("failed to read response body: %w", err)
+		}
 		return nil, fmt.Errorf("API returned non-200 status code: %d, body: %s", resp.StatusCode, string(respBody))
 	}
 
