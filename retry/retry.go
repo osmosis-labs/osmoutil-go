@@ -12,13 +12,13 @@ type RetryConfig struct {
 	MaxDuration time.Duration
 	// InitialInterval is the initial interval to retry the operation
 	InitialInterval time.Duration
-	// MaxInterval is the cap for the interval to retry the operation, as it grows exponentially using IntervalIncrement
+	// MaxInterval is the cap for the interval to retry the operation, as it grows linearly using IntervalIncrement
 	MaxInterval time.Duration
 	// IntervalIncrement is the increment interval to retry the operation
 	IntervalIncrement time.Duration
 }
 
-// RetryWithBackoff executes an operation with exponential backoff and timeout
+// RetryWithBackoff executes an operation with linear backoff and timeout
 // Returns error from operation or context error if cancelled
 func RetryWithBackoff(ctx context.Context, cfg RetryConfig, operation func(context.Context) error) error {
 	timer := time.NewTimer(cfg.MaxDuration)

@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/osmosis-labs/osmoutil-go/retry"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestRetryWithBackoff_Success(t *testing.T) {
@@ -24,13 +25,9 @@ func TestRetryWithBackoff_Success(t *testing.T) {
 	}
 
 	err := retry.RetryWithBackoff(context.Background(), cfg, operation)
-	if err != nil {
-		t.Fatalf("expected no error, got %v", err)
-	}
+	assert.NoError(t, err, "expected no error")
 
-	if callCount != 1 {
-		t.Fatalf("expected operation to be called once, got %d", callCount)
-	}
+	assert.Equal(t, 1, callCount, "expected operation to be called once")
 }
 
 func TestRetryWithBackoff_Failure(t *testing.T) {
@@ -48,13 +45,9 @@ func TestRetryWithBackoff_Failure(t *testing.T) {
 	}
 
 	err := retry.RetryWithBackoff(context.Background(), cfg, operation)
-	if err == nil {
-		t.Fatal("expected an error, got nil")
-	}
+	assert.Error(t, err, "expected an error")
 
-	if callCount <= 1 {
-		t.Fatalf("expected operation to be retried, got %d attempts", callCount)
-	}
+	assert.Greater(t, callCount, 1, "expected operation to be retried")
 }
 
 func TestRetryWithBackoff_MaxDuration(t *testing.T) {
@@ -75,15 +68,9 @@ func TestRetryWithBackoff_MaxDuration(t *testing.T) {
 	err := retry.RetryWithBackoff(context.Background(), cfg, operation)
 	duration := time.Since(startTime)
 
-	if err == nil {
-		t.Fatal("expected an error, got nil")
-	}
+	assert.Error(t, err, "expected an error")
 
-	if duration > cfg.MaxDuration+50*time.Millisecond { // Allow a small buffer for timing inaccuracies
-		t.Fatalf("expected duration to be less than or equal to %v, got %v", cfg.MaxDuration, duration)
-	}
+	assert.LessOrEqual(t, duration, cfg.MaxDuration+50*time.Millisecond, "expected duration to be within limit")
 
-	if callCount < 2 {
-		t.Fatalf("expected operation to be retried at least twice, got %d attempts", callCount)
-	}
+	assert.GreaterOrEqual(t, callCount, 2, "expected operation to be retried at least twice")
 }
