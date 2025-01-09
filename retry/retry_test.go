@@ -1,14 +1,16 @@
-package retry
+package retry_test
 
 import (
 	"context"
 	"errors"
 	"testing"
 	"time"
+
+	"github.com/osmosis-labs/osmoutil-go/retry"
 )
 
 func TestRetryWithBackoff_Success(t *testing.T) {
-	cfg := RetryConfig{
+	cfg := retry.RetryConfig{
 		MaxDuration:       5 * time.Second,
 		InitialInterval:   100 * time.Millisecond,
 		MaxInterval:       500 * time.Millisecond,
@@ -21,7 +23,7 @@ func TestRetryWithBackoff_Success(t *testing.T) {
 		return nil // Simulate a successful operation
 	}
 
-	err := RetryWithBackoff(context.Background(), cfg, operation)
+	err := retry.RetryWithBackoff(context.Background(), cfg, operation)
 	if err != nil {
 		t.Fatalf("expected no error, got %v", err)
 	}
@@ -32,7 +34,7 @@ func TestRetryWithBackoff_Success(t *testing.T) {
 }
 
 func TestRetryWithBackoff_Failure(t *testing.T) {
-	cfg := RetryConfig{
+	cfg := retry.RetryConfig{
 		MaxDuration:       1 * time.Second,
 		InitialInterval:   100 * time.Millisecond,
 		MaxInterval:       500 * time.Millisecond,
@@ -45,7 +47,7 @@ func TestRetryWithBackoff_Failure(t *testing.T) {
 		return errors.New("operation failed") // Simulate a failing operation
 	}
 
-	err := RetryWithBackoff(context.Background(), cfg, operation)
+	err := retry.RetryWithBackoff(context.Background(), cfg, operation)
 	if err == nil {
 		t.Fatal("expected an error, got nil")
 	}
@@ -56,7 +58,7 @@ func TestRetryWithBackoff_Failure(t *testing.T) {
 }
 
 func TestRetryWithBackoff_MaxDuration(t *testing.T) {
-	cfg := RetryConfig{
+	cfg := retry.RetryConfig{
 		MaxDuration:       200 * time.Millisecond, // Set a short max duration
 		InitialInterval:   50 * time.Millisecond,
 		MaxInterval:       100 * time.Millisecond,
@@ -70,7 +72,7 @@ func TestRetryWithBackoff_MaxDuration(t *testing.T) {
 	}
 
 	startTime := time.Now()
-	err := RetryWithBackoff(context.Background(), cfg, operation)
+	err := retry.RetryWithBackoff(context.Background(), cfg, operation)
 	duration := time.Since(startTime)
 
 	if err == nil {
