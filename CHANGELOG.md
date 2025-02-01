@@ -35,6 +35,10 @@ Ref: https://keepachangelog.com/en/1.0.0/
 
 # Changelog
 
+## v0.0.11
+
+- Add scaling factor precompute for fast math operations.
+
 ## v0.0.10
 
 - Add GetLastFailureTime and GetLastSuccessTime to circuit breaker.
