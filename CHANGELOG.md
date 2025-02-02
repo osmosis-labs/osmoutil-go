@@ -35,6 +35,10 @@ Ref: https://keepachangelog.com/en/1.0.0/
 
 # Changelog
 
+## v0.0.13
+
+- Nonce tracker mock.
+
 ## v0.0.12 
 
 - Add scaling factor precompute for fast math operations.
