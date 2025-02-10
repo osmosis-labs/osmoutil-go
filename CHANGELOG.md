@@ -35,6 +35,10 @@ Ref: https://keepachangelog.com/en/1.0.0/
 
 # Changelog
 
+## v0.0.14
+
+- Add GetCurrentNonce() and ForceUpdateNonce() to nonce tracker.
+
 ## v0.0.13
 
 - Nonce tracker mock.

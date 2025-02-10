@@ -22,6 +22,12 @@ type NonceTrackerI interface {
 
 	// GetLastRefetchTime returns the time of the last refetch.
 	GetLastRefetchTime() time.Time
+
+	// GetCurrentNonce returns the current nonce.
+	GetCurrentNonce() NonceResponse
+
+	// ForceUpdateNonce updates the nonce to the given value.
+	ForceUpdateNonce(nonce uint64)
 }
 
 type NonceTracker struct {
@@ -75,6 +81,10 @@ func NewNonceTrackerWithRefetch(ctx context.Context, fetchNonce func(ctx context
 	return nonceTracker, nil
 }
 
+func (n *NonceTracker) GetCurrentNonce() NonceResponse {
+	return n.nonceData
+}
+
 // GetLastRefetchTime implements NonceTrackerI.
 func (n *NonceTracker) GetLastRefetchTime() time.Time {
 	return n.lastRefetch
@@ -107,6 +117,15 @@ func (n *NonceTracker) ForceRefetch(ctx context.Context) (NonceResponse, error) 
 	}
 
 	return NonceResponse{}, fmt.Errorf("failed to force refetch time since (%s), force refetch interval (%s)", timeSince, n.forceRefetchInterval)
+}
+
+// ForceUpdateNonce implements NonceTrackerI
+func (n *NonceTracker) ForceUpdateNonce(nonce uint64) {
+	n.mu.Lock()
+	defer n.mu.Unlock()
+
+	n.nonceData.Nonce = nonce
+	n.lastRefetch = time.Now()
 }
 
 // refetchAndUpdateNonce refetched and updates internal nonce.

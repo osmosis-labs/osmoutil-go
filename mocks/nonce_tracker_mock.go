@@ -13,6 +13,16 @@ type NonceTrackerMock struct {
 	IncrementAndGetFunc    func() tx.NonceResponse
 }
 
+// ForceUpdateNonce implements tx.NonceTrackerI.
+func (n *NonceTrackerMock) ForceUpdateNonce(nonce uint64) {
+	panic("unimplemented")
+}
+
+// GetCurrentNonce implements tx.NonceTrackerI.
+func (n *NonceTrackerMock) GetCurrentNonce() tx.NonceResponse {
+	panic("unimplemented")
+}
+
 // ForceRefetch implements tx.NonceTrackerI.
 func (n *NonceTrackerMock) ForceRefetch(ctx context.Context) (tx.NonceResponse, error) {
 	if n.ForceRefetchFunc == nil {
