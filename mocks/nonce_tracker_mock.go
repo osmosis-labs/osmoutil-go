@@ -8,6 +8,8 @@ import (
 )
 
 type NonceTrackerMock struct {
+	ForceUpdateNonceFunc   func(nonce uint64)
+	GetCurrentNonceFunc    func() tx.NonceResponse
 	ForceRefetchFunc       func(ctx context.Context) (tx.NonceResponse, error)
 	GetLastRefetchTimeFunc func() time.Time
 	IncrementAndGetFunc    func() tx.NonceResponse
@@ -15,12 +17,18 @@ type NonceTrackerMock struct {
 
 // ForceUpdateNonce implements tx.NonceTrackerI.
 func (n *NonceTrackerMock) ForceUpdateNonce(nonce uint64) {
-	panic("unimplemented")
+	if n.ForceUpdateNonceFunc == nil {
+		panic("unimplemented")
+	}
+	n.ForceUpdateNonceFunc(nonce)
 }
 
 // GetCurrentNonce implements tx.NonceTrackerI.
 func (n *NonceTrackerMock) GetCurrentNonce() tx.NonceResponse {
-	panic("unimplemented")
+	if n.GetCurrentNonceFunc == nil {
+		panic("unimplemented")
+	}
+	return n.GetCurrentNonceFunc()
 }
 
 // ForceRefetch implements tx.NonceTrackerI.
