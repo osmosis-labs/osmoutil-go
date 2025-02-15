@@ -41,7 +41,7 @@ func makeRequest(ctx context.Context, method httpMethod, url string, payload int
 
 	// Add custom headers
 	for key, value := range headers {
-		req.Header.Add(key, value)
+		req.Header[key] = []string{value}
 	}
 
 	client := &http.Client{}

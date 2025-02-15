@@ -83,6 +83,16 @@ func TestMakeRequest(t *testing.T) {
 		)
 		require.Error(t, err)
 	})
+
+	t.Run("use lowercase headers", func(t *testing.T) {
+		headers := map[string]string{"x-test-header": "test-value"}
+		var response TestResponse
+
+		_, err := httputil.Get(ctx, server.URL, headers, &response)
+		require.NoError(t, err)
+		require.Equal(t, "success", response.Message)
+		require.Equal(t, "ok", response.Status)
+	})
 }
 
 func TestBuildURLWithParams(t *testing.T) {
