@@ -35,6 +35,10 @@ Ref: https://keepachangelog.com/en/1.0.0/
 
 # Changelog
 
+## v0.0.17
+
+- Add Cosmos signer.
+
 ## v0.0.16
 
 - Allow case sensitive header keys in HTTP requests.
