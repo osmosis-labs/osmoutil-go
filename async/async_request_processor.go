@@ -48,8 +48,8 @@ type AsyncRequestProcessor[T any, R any] struct {
 	ctx          context.Context
 	cancel       context.CancelFunc
 	maxRetries   int
-
-	retryConfig *retry.RetryConfig
+	maxDuration  time.Duration
+	retryConfig  *retry.RetryConfig
 }
 
 // NewAsyncRequstProcessor creates a new background worker with the specified buffer size and processor
@@ -58,6 +58,7 @@ func NewAsyncRequstProcessor[T any, R any](
 	bufferSize int,
 	processor RequestProcessor[T, R],
 	retryConfig *retry.RetryConfig,
+	maxDuration time.Duration,
 ) *AsyncRequestProcessor[T, R] {
 	ctx, cancel := context.WithCancel(context.Background())
 
@@ -68,6 +69,7 @@ func NewAsyncRequstProcessor[T any, R any](
 		ctx:          ctx,
 		cancel:       cancel,
 		retryConfig:  retryConfig,
+		maxDuration:  maxDuration,
 	}
 }
 
@@ -80,11 +82,12 @@ var (
 // If retryConfig is nil, no retry logic will be used
 func NewAsyncRequestWorkerWithFunc[T any, R any](
 	bufferSize int,
+	maxDuration time.Duration,
 	retryConfig *retry.RetryConfig,
 	processFn func(ctx context.Context, req Request[T]) (R, error),
 ) *AsyncRequestProcessor[T, R] {
 	processor := FunctionProcessor[T, R]{ProcessFn: processFn}
-	return NewAsyncRequstProcessor(bufferSize, processor, retryConfig)
+	return NewAsyncRequstProcessor(bufferSize, processor, retryConfig, maxDuration)
 }
 
 // Start begins the worker's processing loop in a separate goroutine
@@ -177,7 +180,7 @@ func (w *AsyncRequestProcessor[T, R]) processRequest(req Request[T]) {
 
 func (w *AsyncRequestProcessor[T, R]) process(req Request[T]) (R, error) {
 	// Create a context for this specific request that inherits from the worker context
-	reqCtx, cancel := context.WithTimeout(w.ctx, w.retryConfig.MaxDuration)
+	reqCtx, cancel := context.WithTimeout(w.ctx, w.maxDuration)
 
 	// Process the request using the custom processor
 	responseData, err := w.processor.Process(reqCtx, req)

@@ -20,6 +20,8 @@ type TestOutput struct {
 	ProcessedAt    time.Time
 }
 
+const defaultMaxDuration = 10 * time.Second
+
 var (
 	defaultRetryConfig = &retry.RetryConfig{
 		MaxDuration: 30 * time.Second,
@@ -29,7 +31,7 @@ var (
 func TestAsyncRequestProcessor(t *testing.T) {
 	// Common test setup function to reduce duplication
 	setupRequestProcessor := func(processor async.RequestProcessor[TestInput, TestOutput]) *async.AsyncRequestProcessor[TestInput, TestOutput] {
-		return async.NewAsyncRequstProcessor[TestInput, TestOutput](10, processor, defaultRetryConfig)
+		return async.NewAsyncRequstProcessor[TestInput, TestOutput](10, processor, defaultRetryConfig, defaultMaxDuration)
 	}
 
 	// Helper to create a test request
@@ -178,7 +180,7 @@ func TestAsyncRequestProcessorWithFunc(t *testing.T) {
 		return len(req.Data), nil
 	}
 
-	worker := async.NewAsyncRequestWorkerWithFunc[string, int](5, defaultRetryConfig, processFn)
+	worker := async.NewAsyncRequestWorkerWithFunc[string, int](5, defaultMaxDuration, defaultRetryConfig, processFn)
 
 	// Start the worker
 	worker.Start()
@@ -219,7 +221,7 @@ func TestWorkerChannelFull(t *testing.T) {
 	}
 
 	// Buffer size of 2
-	worker := async.NewAsyncRequstProcessor(2, processor, defaultRetryConfig)
+	worker := async.NewAsyncRequstProcessor(2, processor, defaultRetryConfig, defaultMaxDuration)
 	worker.Start()
 	defer worker.Stop()
 
@@ -262,7 +264,7 @@ func TestWorkerStopProcessingRemainingItems(t *testing.T) {
 		},
 	}
 
-	worker := async.NewAsyncRequstProcessor[string, string](10, processor, defaultRetryConfig)
+	worker := async.NewAsyncRequstProcessor[string, string](10, processor, defaultRetryConfig, defaultMaxDuration)
 	worker.Start()
 
 	// Submit several requests

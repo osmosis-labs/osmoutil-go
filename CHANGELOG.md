@@ -35,6 +35,10 @@ Ref: https://keepachangelog.com/en/1.0.0/
 
 # Changelog
 
+## Unreleased
+
+- Add max duration to async request processor, change it from relying on retry config.
+
 ## v0.0.18
 
 - Async request processor abstraction
