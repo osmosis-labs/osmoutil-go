@@ -29,7 +29,7 @@ func TestNonceTracker_IncrementAndGet(t *testing.T) {
 	// Note: first nonce does not get incremented.
 	for i := 0; i <= 5; i++ {
 		result := tracker.IncrementAndGet()
-		assert.Equal(t, initialNonce+uint64(i+1), result.Nonce)
+		assert.Equal(t, initialNonce+uint64(i), result.Nonce)
 		assert.Equal(t, uint64(1), result.Accnum)
 	}
 }
