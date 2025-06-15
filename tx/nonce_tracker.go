@@ -160,6 +160,11 @@ func (n *NonceTracker) refetchAndUpdateNonce(ctx context.Context) (NonceResponse
 		n.nonceData = res.nonce
 		n.lastRefetch = time.Now()
 
+		// Mark the first fetch as done.
+		if n.isFirstFetch {
+			n.isFirstFetch = false
+		}
+
 		return n.nonceData, nil
 	}
 }
