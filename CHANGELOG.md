@@ -35,9 +35,8 @@ Ref: https://keepachangelog.com/en/1.0.0/
 
 # Changelog
 
-## v0.0.19
+## Unreleased
 
-- Fix nonce tracker first fetch. Mark the first fetch as done so that it is incremented in IncrementAndGet()
 - Add max duration to async request processor, change it from relying on retry config.
 
 ## v0.0.18
