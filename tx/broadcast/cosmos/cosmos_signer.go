@@ -71,8 +71,20 @@ func InitializeCosmosSigner(ctx context.Context, privateKeyHex string, clientCon
 		return nil, fmt.Errorf("failed to create cosmos signer for %s: %w", clientConfig.Name, err)
 	}
 
+	isCustomForceRefetchInterval := clientConfig.ForceRefetchInterval != 0
+	isCustomRefetchTimeout := clientConfig.RefetchTimeout != 0
+
+	if isCustomForceRefetchInterval != isCustomRefetchTimeout {
+		return nil, fmt.Errorf("force refetch interval and refetch timeout must be set together. Either both custom or none of them.")
+	}
+
 	// Initialize nonce tracker
 	nonceTracker := NewCosmosNonceTracker(signer.GetAddressString(), restClient)
+
+	if isCustomForceRefetchInterval && isCustomRefetchTimeout {
+		// Override the default force refetch interval and refetch timeout
+		osmoutilstx.WithCustomIntervals(clientConfig.ForceRefetchInterval, clientConfig.RefetchTimeout)(nonceTracker)
+	}
 
 	// Force refetches the nonce
 	if _, err := nonceTracker.ForceRefetch(ctx); err != nil {

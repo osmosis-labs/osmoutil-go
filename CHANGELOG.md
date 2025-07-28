@@ -37,6 +37,7 @@ Ref: https://keepachangelog.com/en/1.0.0/
 
 ## Unreleased
 
+- Add ForceRefetchInterval and RefetchTimeout to CosmosClientConfig.
 - Add WithCustomIntervals to nonce tracker.
 
 ## v0.0.20

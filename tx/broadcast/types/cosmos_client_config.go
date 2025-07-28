@@ -1,5 +1,7 @@
 package broadcasttypes
 
+import "time"
+
 type CosmosClientConfig struct {
 	Name              string
 	NativeChainID     string
@@ -10,6 +12,12 @@ type CosmosClientConfig struct {
 	Memo              string
 	RPCURL            string
 	LCDURL            string
+
+	// Custom force refetch interval and refetch timeout.
+	// If not set, the default values will be used.
+	// Custom intervals must be set together. Either both custom or none of them.
+	ForceRefetchInterval time.Duration
+	RefetchTimeout       time.Duration
 }
 
 var (
