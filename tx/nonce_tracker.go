@@ -68,6 +68,15 @@ func NewNonceTracker(fetchNonce func(ctx context.Context) (NonceResponse, error)
 	}
 }
 
+// WithCustomIntervals allows to override the default force refetch interval and refetch timeout.
+// This is useful for testing.
+func WithCustomIntervals(forceRefetchInterval time.Duration, refetchTimeout time.Duration) func(*NonceTracker) {
+	return func(n *NonceTracker) {
+		n.forceRefetchInterval = forceRefetchInterval
+		n.refetchTimeout = refetchTimeout
+	}
+}
+
 // NewNonceTrackerWithRefetch initializes a new nonce tracker and executes ForceRefetch().
 func NewNonceTrackerWithRefetch(ctx context.Context, fetchNonce func(ctx context.Context) (NonceResponse, error), forceRefetchInterval time.Duration, refetchTimeout time.Duration) (*NonceTracker, error) {
 	// Initialize the nonce tracker

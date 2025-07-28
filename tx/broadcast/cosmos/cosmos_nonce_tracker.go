@@ -13,7 +13,7 @@ const (
 )
 
 // NewCosmosNonceTracker creates a new nonce tracker for Cosmos
-func NewCosmosNonceTracker(bech32Address string, restClient CosmosRESTClient) osmoutilstx.NonceTrackerI {
+func NewCosmosNonceTracker(bech32Address string, restClient CosmosRESTClient) *osmoutilstx.NonceTracker {
 	// Create a wrapper function to convert the sequence response
 	getNonce := func(ctx context.Context) (osmoutilstx.NonceResponse, error) {
 		seq, accNum, err := restClient.GetInitialSequence(ctx, bech32Address)

@@ -35,6 +35,10 @@ Ref: https://keepachangelog.com/en/1.0.0/
 
 # Changelog
 
+## Unreleased
+
+- Add WithCustomIntervals to nonce tracker.
+
 ## v0.0.20
 
 - Revert: Fix nonce tracker first fetch. Mark the first fetch as done so that it is incremented in IncrementAndGet()
